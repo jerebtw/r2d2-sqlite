@@ -1,5 +1,5 @@
 extern crate r2d2;
-extern crate r2d2_sqlite;
+extern crate r2d2_sqlite_pool;
 extern crate rusqlite;
 extern crate tempfile;
 
@@ -9,7 +9,7 @@ use std::thread;
 use r2d2::ManageConnection;
 use tempfile::TempDir;
 
-use r2d2_sqlite::SqliteConnectionManager;
+use r2d2_sqlite_pool::SqliteConnectionManager;
 use rusqlite::Connection;
 
 #[test]
@@ -126,4 +126,75 @@ fn test_with_init() {
         )
         .unwrap();
     assert_eq!(db_version, 123);
+}
+
+#[test]
+fn test_in_memory_db_is_shared() {
+    let manager = SqliteConnectionManager::memory();
+    let pool = r2d2::Pool::builder().max_size(10).build(manager).unwrap();
+
+    pool.get()
+        .unwrap()
+        .execute("CREATE TABLE IF NOT EXISTS foo (bar INTEGER)", [])
+        .unwrap();
+
+    (0..10)
+        .map(|i: i32| {
+            let pool = pool.clone();
+            std::thread::spawn(move || {
+                let conn = pool.get().unwrap();
+                conn.execute("INSERT INTO foo (bar) VALUES (?)", [i])
+                    .unwrap();
+            })
+        })
+        .collect::<Vec<_>>()
+        .into_iter()
+        .try_for_each(std::thread::JoinHandle::join)
+        .unwrap();
+
+    let conn = pool.get().unwrap();
+    let mut stmt = conn.prepare("SELECT bar from foo").unwrap();
+    let mut rows: Vec<i32> = stmt
+        .query_map([], |row| row.get(0))
+        .unwrap()
+        .into_iter()
+        .flatten()
+        .collect();
+    rows.sort_unstable();
+    assert_eq!(rows, (0..10).collect::<Vec<_>>());
+}
+
+#[test]
+fn test_different_in_memory_dbs_are_not_shared() {
+    let manager1 = SqliteConnectionManager::memory();
+    let pool1 = r2d2::Pool::new(manager1).unwrap();
+    let manager2 = SqliteConnectionManager::memory();
+    let pool2 = r2d2::Pool::new(manager2).unwrap();
+
+    pool1
+        .get()
+        .unwrap()
+        .execute_batch("CREATE TABLE foo (bar INTEGER)")
+        .unwrap();
+    let result = pool2
+        .get()
+        .unwrap()
+        .execute_batch("CREATE TABLE foo (bar INTEGER)");
+
+    assert!(result.is_ok());
+}
+
+#[test]
+fn test_in_memory_db_persists() {
+    let manager = SqliteConnectionManager::memory();
+
+    let conn = manager.connect().unwrap();
+    conn.execute_batch("CREATE TABLE foo (bar INTEGER)")
+        .unwrap();
+    drop(conn);
+
+    let conn = manager.connect().unwrap();
+    let mut stmt = conn.prepare("SELECT * from foo").unwrap();
+    let result = stmt.execute([]);
+    assert!(result.is_ok());
 }

@@ -10,7 +10,7 @@ keywords = ["sqlite", "r2d2", "pool"]
 edition = "2021"
 
 [lib]
-name = "r2d2_sqlite"
+name = "r2d2_sqlite_pool"
 path = "src/lib.rs"
 test = false
 
@@ -20,6 +20,7 @@ path = "tests/test.rs"
 
 [dependencies]
 r2d2 = "0"
+nanoid = "0"
 
 [dependencies.rusqlite]
 version = "0"
