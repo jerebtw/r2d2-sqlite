@@ -1,20 +1,18 @@
 [package]
-name = "r2d2_sqlite"
-version = "0.21.0"
-authors = ["Jovansonlee Cesar<ivanceras@gmail.com>", "Hugo Woesthuis <hugo@woesthuis.eu>"]
+name = "r2d2_sqlite_pool"
+version = "0.1.0"
+authors = []
 license = "MIT"
 description = "SQLite and SQLCipher support for the r2d2 connection pool"
-repository = "https://github.com/ivanceras/r2d2-sqlite"
-documentation = "https://docs.rs/r2d2_sqlite/"
+repository = "https://github.com/jerebtw/r2d2-sqlite"
+documentation = "https://docs.rs/r2d2_sqlite_pool/"
 keywords = ["sqlite", "r2d2", "pool"]
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "r2d2_sqlite"
 path = "src/lib.rs"
 test = false
-
-
 
 [[test]]
 name = "test"
@@ -24,13 +22,13 @@ path = "tests/test.rs"
 r2d2 = "0.8"
 
 [dependencies.rusqlite]
-version = "0.28"
+version = "0.29"
 
 [dev-dependencies]
 tempdir = "0.3"
 
 [dev-dependencies.rusqlite]
-version = "0.28"
+version = "0.29"
 features = ["trace"]
 
 

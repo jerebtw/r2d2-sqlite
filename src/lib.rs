@@ -1,7 +1,7 @@
 #![deny(warnings)]
 //! # Sqlite support for the `r2d2` connection pool.
 //!
-//! Library crate: [r2d2-sqlite](https://crates.io/crates/r2d2-sqlite/)
+//! Library crate: [r2d2_sqlite_pool](https://crates.io/crates/r2d2_sqlite_pool/)
 //!
 //! Integrated with: [r2d2](https://crates.io/crates/r2d2)
 //! and [rusqlite](https://crates.io/crates/rusqlite)
@@ -10,11 +10,11 @@
 //!
 //! ```rust,no_run
 //! extern crate r2d2;
-//! extern crate r2d2_sqlite;
+//! extern crate r2d2_sqlite_pool;
 //! extern crate rusqlite;
 //!
 //! use std::thread;
-//! use r2d2_sqlite::SqliteConnectionManager;
+//! use r2d2_sqlite_pool::SqliteConnectionManager;
 //! use rusqlite::params;
 //!
 //! fn main() {
@@ -41,10 +41,10 @@
 //!         .unwrap()
 //! }
 //! ```
+pub use rusqlite;
 use rusqlite::{Connection, Error, OpenFlags};
 use std::fmt;
 use std::path::{Path, PathBuf};
-pub use rusqlite;
 
 #[derive(Debug)]
 enum Source {
@@ -110,7 +110,7 @@ impl SqliteConnectionManager {
     /// true for every connection.
     ///
     /// ```rust,no_run
-    /// # use r2d2_sqlite::{SqliteConnectionManager};
+    /// # use r2d2_sqlite_pool::{SqliteConnectionManager};
     /// let manager = SqliteConnectionManager::file("app.db")
     ///     .with_init(|c| c.execute_batch("PRAGMA foreign_keys=1;"));
     /// ```

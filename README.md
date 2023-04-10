@@ -1,10 +1,8 @@
-r2d2-sqlite
-=============
-[![Latest Version](https://img.shields.io/crates/v/r2d2-sqlite.svg)](https://crates.io/crates/r2d2-sqlite)
-[![Build Status](https://api.travis-ci.org/ivanceras/r2d2-sqlite.svg)](https://travis-ci.org/ivanceras/r2d2-sqlite)
+# r2d2-sqlite-pool
+
+[![Latest Version](https://img.shields.io/crates/v/r2d2_sqlite_pool.svg)](https://crates.io/crates/r2d2_sqlite_pool)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-r2d2 connection pool for sqlite based on Steven Fackler's r2d2-postgres. 
+r2d2 connection pool for sqlite forked from https://github.com/ivanceras/r2d2-sqlite.
 
-
-[Documentation](https://docs.rs/r2d2_sqlite/)
+[Documentation](https://docs.rs/r2d2_sqlite_pool/)
