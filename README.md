@@ -1,3 +1,7 @@
+```
+use r2d2-sqlite
+```
+
 # r2d2-sqlite-pool
 
 [![Latest Version](https://img.shields.io/crates/v/r2d2_sqlite_pool.svg)](https://crates.io/crates/r2d2_sqlite_pool)
